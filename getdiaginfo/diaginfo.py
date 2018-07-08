@@ -136,10 +136,8 @@ class DiagInfo(object):
 
         Only used in __init__ method. No further use
         """
-        with open(infoelereg.screen_out_control_file(), "r") as sofp:
-            lso = [line.strip() for line in sofp]
-        with open(infoelereg.file_out_control_file(), "r") as fofp:
-            lfo = [line.strip() for line in fofp]
+        lso = infoelereg.lbriefelereg
+        lfo = infoelereg.ldetailelereg
         return lso, lfo
 
     def log(self, desp="", excdvars=[], incdvars=[]):

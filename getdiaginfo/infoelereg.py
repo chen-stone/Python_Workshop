@@ -1,24 +1,21 @@
-#coding=utf-8
-import os
+# coding=utf-8
 
+# Deciding which elements can be output to console and their output order
+lbriefelereg = ["Begin",
+                "User Description",
+                "Process ID",
+                "Process Name",
+                "Function Name",
+                "Function's File",
+                "Exception Type",
+                "Exception Value",
+                "Error Code Line",
+                "Call Chain",
+                "End"]
 
-def screen_out_control_file():
-    sof = os.path.join(os.path.split(__file__)[0], "ScreenOutElement.txt")
-    if not os.path.isfile(sof):
-        with open(sof, "w") as sofp:
-            sofp.writelines("Begin\nUser Description\nProcess ID\nProcess Name\nFunction Name\nFunction's File\nException Type\nException Value\nError Code Line\nCall Chain\nEnd")
-    return sof
-
-
-def file_out_control_file():
-    fof = os.path.join(os.path.split(__file__)[0], "FileOutElement.txt")
-    if not os.path.isfile(fof):
-        with open(fof, "w") as fofp:
-            fofp.writelines("Begin\nUser Description\nProcess ID\nProcess Name\nFunction Name\nFunction's File\nException Type\nException Value\nError Code Line\nCall Chain\nVariable Records\nEnd")
-    return fof
-
+# Deciding which elements can be output to log file and their output order
+ldetailelereg = lbriefelereg[:-1] + ["Variable Records", "End"]
 
 if __name__ == "__main__":
-    print "Screen file", screen_out_control_file()
-    print "File file", file_out_control_file()
-    import linecache
+    for ele in lbriefelereg:
+        print ele
