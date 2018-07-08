@@ -1,3 +1,2 @@
-Git is a version control system.
-Git is free software.
-what's about modification?
+My Python workshop.
+Every folder in the root may be a little project.
