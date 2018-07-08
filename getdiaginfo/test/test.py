@@ -1,0 +1,63 @@
+#coding=utf-8
+import inspect
+import traceback
+
+
+class Test:
+    def __init__(self, ip1, ip2="ip2"):
+        self.tp1 = "tp1"
+        self.tp2 = "tp2"
+        ip3 = "ip3"
+        diobj.log()
+
+    def run(self, rp1, rp2="rp2"):
+        self.tp1="trp1"
+        rp3 = "rp3"
+        diobj.log()
+        try:
+            1/0
+        except ZeroDivisionError:
+            diobj.log()
+        1/0
+
+
+def amhp(ap1, ap2="ap2"):
+    ap3 = "ap3"
+    diobj.log()
+    try:
+        1/0
+    except:
+        diobj.log()
+        pass
+    1/0
+    pass
+
+
+def f3(f3p1, f3p2="f3p2"):
+    f3p3 = "f3p3"
+    amhp(f3p3)
+
+
+def f2(f2p1, f2p2="f2p2"):
+    f2p3 = "f2p3"
+    f3(f2p3)
+
+
+def f1(f1p1, f1p2="f1p2"):
+    f1p3 = "f1p3"
+    f2(f1p3)
+
+
+if __name__ == "__main__":
+    # import sys
+    # sys.path.append(r"D:\\MyDoku\\Python_Workstation\\")
+    print __file__[:__file__.find("test")]
+    import getdiaginfo
+    diobj = getdiaginfo.enable()
+    
+    # f1("f1p1")
+    t = Test("from main")
+    t.run("from main")
+    pass
+
+
