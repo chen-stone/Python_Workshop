@@ -1,5 +1,7 @@
-#coding=utf-8
-def fmt_area(lflag, label, value):
+# coding=utf-8
+
+
+def fmt_area_border(lflag, label, value):
     multiprint(value, lflag)
 
 
@@ -7,7 +9,7 @@ def fmt_str_same_line(lflag, label, value):
     multiprint("{0: <20}{1}".format(label+":", value), lflag)
 
 
-def fmt_str_dif_line(lflag, label, value):
+def fmt_list_dif_line(lflag, label, value):
     multiprint(label+":", lflag)
     [multiprint("  "+line.rstrip(), lflag) for line in value]
         
@@ -36,8 +38,9 @@ def multiprint(s, lflag):
     if lflag[1]:        
         lflag[1].writelines(s.rstrip()+"\n")
 
-dftfuncmap = {"Begin": fmt_area,
-              "End": fmt_area,
+
+dftfuncmap = {"Begin": fmt_area_border,
+              "End": fmt_area_border,
               "User Description": fmt_str_same_line,
               "Process ID": fmt_str_same_line,
               "Process Name": fmt_str_same_line,
@@ -45,8 +48,8 @@ dftfuncmap = {"Begin": fmt_area,
               "Exception Value": fmt_str_same_line,
               "Function Name": fmt_str_same_line,
               "Function's File": fmt_str_same_line,
-              "Error Code Line": fmt_str_dif_line,
-              "Call Chain": fmt_str_dif_line,
+              "Error Code Line": fmt_list_dif_line,
+              "Call Chain": fmt_list_dif_line,
               "Variable Records": fmt_dict_dif_line }
 
 

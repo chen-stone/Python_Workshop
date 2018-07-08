@@ -27,7 +27,7 @@ def amhp(ap1, ap2="ap2"):
     except:
         diobj.log()
         pass
-    1/0
+    # 1/0
     pass
 
 
