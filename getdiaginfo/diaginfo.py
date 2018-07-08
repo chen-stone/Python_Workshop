@@ -55,16 +55,13 @@ Example of Diagnosis information output:
 import multiprocessing
 import os
 import sys
-import time
-import traceback
 import inspect
-import linecache
 import infoelereg
 import fmtoutput
 
 if __debug__:
     import cgitb
-    #cgitb.enable(format="text")
+    # cgitb.enable(format="text")
 
 
 class DiagException(Exception):
@@ -75,14 +72,7 @@ class DiagException(Exception):
     pass
 
 
-def _diag_elements_register():
-    """Defining output information elements and their orders.
 
-    Only used in __init__ method.
-    """
-    lbco = infoelereg.lbriefelereg
-    ldfo = infoelereg.ldetailelereg
-    return lbco, ldfo
 
 
 class DiagInfo(object):
@@ -104,7 +94,7 @@ class DiagInfo(object):
         """
         self.__logdir = logdir  # Directory of logging file.
         self.__dinfo = None  # Storing diagnosis information, be initialized in log method.
-        self.__lbrief, self.__ldetail = _diag_elements_register()
+        self.__lbrief, self.__ldetail = infoelereg.diag_elements_register()
         self.__out2scn = out2scn  # Switch control output in screen or not.
         self.__excdvars = excdvars  # Dumping all variables except those in __excdvars list.
         self.__incdvars = incdvars  # Dumping the specified variables in __incdvars list.
@@ -171,8 +161,10 @@ class DiagInfo(object):
 
         Only used in log method. No further use.
         """
-        [fmtoutput.dftfuncmap[label]([self.__out2scn, None], label, self.__dinfo[label]) for label in self.__lbrief]
-        [fmtoutput.dftfuncmap[label]([False, self.__logfp], label, self.__dinfo[label]) for label in self.__ldetail]
+        [fmtoutput.dftfuncmap[label]([self.__out2scn, None], label, self.__dinfo[label])
+            for label in self.__lbrief]
+        [fmtoutput.dftfuncmap[label]([False, self.__logfp], label, self.__dinfo[label])
+            for label in self.__ldetail]
 
     def __collect_diag_info(self):
         """Collecting diagnosis information.
@@ -192,7 +184,8 @@ class DiagInfo(object):
                         etype, evalue, tb = sys.exc_info()
                 self.__dexp = dict(zip(self.__dexpitem, [etype, evalue, tb, False]))
             finally:
-                etype=evalue=tb = None
+                etype = evalue = tb = None
+        # Gathering exception information.
         self.__get_exc_info()
 
     def __get_proc_info(self):
@@ -218,12 +211,9 @@ class DiagInfo(object):
         tb = self.__dexp["tb"]
         isde = (self.__dexp["etype"].__name__ == "DiagException")
         f = tb.tb_frame.f_back.f_back if isde else tb.tb_frame
-        # print "isde ", isde
-        # time.sleep(10)
         fn = 1
         for f, filename, lineno, funcname, lcodes, lind in inspect.getouterframes(f, context=3):
             if 1 == fn:
-                # lineno = f.f_lineno if isde else tb.tb_lineno
                 if not isde:
                     filename, lineno, funcname, lcodes, lind = inspect.getframeinfo(tb, context=3)
                 dtvars = self.__record_vars(f.f_locals, f.f_globals)
@@ -262,23 +252,30 @@ class DiagInfo(object):
                                  "Variable Records": {funcname: dtvars}})
             if fn > 1:
                 self.__dinfo["Variable Records"].update({funcname: self.__record_vars(f.f_locals, f.f_globals)})
-        # if "Call Chain" in self.__dinfo:
-        #     self.__dinfo["Call Chain"].reverse()
 
     def __fmt_call_chain(self, funcname, lineno, filename, errcode):
+        """Formating call chain.
+
+        Try to make call chain clearly in console and log file.
+        """
         # ch = "Function {0}: line {1}, file {2}\n    {3}".format(funcname, lineno, filename, errcode)
-        ch = "Func {0}  ------>  {3}\t******\tin line {1}, file {2}".format(funcname, lineno, filename, errcode.strip())
+        ch = "Func {0}  ------>  {3}\t******\t" \
+             "in line {1}, file {2}".format(funcname, lineno, filename, errcode.strip())
         return ch
 
     def __record_vars(self, localvars, globalvars):
+        """Handling variables which are include local variables, global variables and class variables.
+
+        If excdvars and incdvars both are empty [], dumping all classvars, localvars and globalvars;
+        elif incdvars is not empty, dumping the specified variables.
+        elif excdvars is not empty, dumping all variables except those in excdvars list.
+        """
         classvars = dict()
         dvars = dict()
-        # If exception or log happened in an object of a class, try to record.
+        # If exception or log happened in an object of a class, try to record class variables.
         if "self" in localvars and hasattr(localvars["self"], "__dict__"):
             classvars = localvars["self"].__dict__
-        # If excdvars and incdvars both are empty [], dumping all classvars, localvars and globalvars;
-        # elif incdvars is not empty, dumping the specified variables.
-        # elif excdvars is not empty, dumping all variables except those in excdvars list.
+        # Handling variables following  self.__incdvars and self.__excdvars
         if self.__incdvars:
             dvars = {"user define": {}}
             for iv in self.__incdvars:
