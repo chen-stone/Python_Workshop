@@ -49,15 +49,19 @@ def f1(f1p1, f1p2="f1p2"):
 
 
 if __name__ == "__main__":
-    # import sys
-    # sys.path.append(r"D:\\MyDoku\\Python_Workstation\\")
-    print __file__[:__file__.find("test")]
+    # A little bit background work.
+    import sys
+    pkgpath = __file__[:__file__.find("test")]
+    if pkgpath not in sys.path:
+        sys.path.append(pkgpath)
+    # Beginning test...
     import getdiaginfo
     diobj = getdiaginfo.enable()
-    
-    # f1("f1p1")
+    # Testing function information log: just log, except branch log.
+    f1("f1p1")
+    # Testing class information log: just log, except branch log and raised exception.
     t = Test("from main")
     t.run("from main")
-    pass
+    print "End of test."
 
 
