@@ -1,0 +1,11 @@
+Begin
+User Description
+Process ID
+Process Name
+Function Name
+Function's File
+Exception Type
+Exception Value
+Error Code Line
+Call Chain
+End

@@ -1,6 +1,4 @@
-#coding=utf-8
-import inspect
-import traceback
+# coding=utf-8
 
 
 class Test:
@@ -56,10 +54,10 @@ if __name__ == "__main__":
         sys.path.append(pkgpath)
     # Beginning test...
     import getdiaginfo
-    diobj = getdiaginfo.enable()
-    # Testing function information log: just log, except branch log.
+    diobj = getdiaginfo.enable(out2scn=False)
+    # Testing function diagnosis information log: just log, except branch log.
     f1("f1p1")
-    # Testing class information log: just log, except branch log and raised exception.
+    # Testing class diagnosis information log: just log, except branch log and raised exception.
     t = Test("from main")
     t.run("from main")
     print "End of test."
