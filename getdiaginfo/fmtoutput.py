@@ -18,7 +18,7 @@ def fmt_dict_dif_line(lflag, label, value):
 
 
 def _output(value, lflag, tabkeynum=1):
-    for key in value:        
+    for key in sorted(value.keys()):
         if isinstance(value[key], dict):
             multiprint("{0}{1}:\n".format("\t"*tabkeynum, key), lflag)
             _output(value[key], lflag, tabkeynum+1)
