@@ -75,6 +75,16 @@ class DiagException(Exception):
     pass
 
 
+def _diag_elements_register():
+    """Defining output information elements and their orders.
+
+    Only used in __init__ method.
+    """
+    lbco = infoelereg.lbriefelereg
+    ldfo = infoelereg.ldetailelereg
+    return lbco, ldfo
+
+
 class DiagInfo(object):
     """Collecting and outputting diagnosis information when needed.
 
@@ -94,7 +104,7 @@ class DiagInfo(object):
         """
         self.__logdir = logdir  # Directory of logging file.
         self.__dinfo = None  # Storing diagnosis information, be initialized in log method.
-        self.__lbrief, self.__ldetail = self.__diag_elements_register()
+        self.__lbrief, self.__ldetail = _diag_elements_register()
         self.__out2scn = out2scn  # Switch control output in screen or not.
         self.__excdvars = excdvars  # Dumping all variables except those in __excdvars list.
         self.__incdvars = incdvars  # Dumping the specified variables in __incdvars list.
@@ -130,15 +140,6 @@ class DiagInfo(object):
         filename = "".join(["DiagInfo_cdx", 
                             ".log"])
         return open(os.path.join(self.__logdir, filename), "w")
-
-    def __diag_elements_register(self):
-        """Defining output information elements and their orders.
-
-        Only used in __init__ method. No further use
-        """
-        lso = infoelereg.lbriefelereg
-        lfo = infoelereg.ldetailelereg
-        return lso, lfo
 
     def log(self, desp="", excdvars=[], incdvars=[]):
         """Logging diagnosis information and outputting it.
