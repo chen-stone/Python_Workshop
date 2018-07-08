@@ -216,15 +216,15 @@ class DiagInfo(object):
 
     def __get_exc_info_log(self):
         tb = self.__dexp["tb"]
-        isDE = (self.__dexp["etype"].__name__ == "DiagException")
-        f = tb.tb_frame.f_back.f_back if isDE else tb.tb_frame
-        # print "isDE ", isDE
+        isde = (self.__dexp["etype"].__name__ == "DiagException")
+        f = tb.tb_frame.f_back.f_back if isde else tb.tb_frame
+        # print "isde ", isde
         # time.sleep(10)
         fn = 1
         for f, filename, lineno, funcname, lcodes, lind in inspect.getouterframes(f, context=3):
             if 1 == fn:
-                # lineno = f.f_lineno if isDE else tb.tb_lineno
-                if not isDE:
+                # lineno = f.f_lineno if isde else tb.tb_lineno
+                if not isde:
                     filename, lineno, funcname, lcodes, lind = inspect.getframeinfo(tb, context=3)
                 dtvars = self.__record_vars(f.f_locals, f.f_globals)
                 self.__dinfo.update({"Function Name": funcname,
@@ -266,7 +266,9 @@ class DiagInfo(object):
         #     self.__dinfo["Call Chain"].reverse()
 
     def __fmt_call_chain(self, funcname, lineno, filename, errcode):
-        return "Function {0}: line {1}, file {2}\n    {3}".format(funcname, lineno, filename, errcode)
+        # ch = "Function {0}: line {1}, file {2}\n    {3}".format(funcname, lineno, filename, errcode)
+        ch = "Func {0}  ------>  {3}\t******\tin line {1}, file {2}".format(funcname, lineno, filename, errcode.strip())
+        return ch
 
     def __record_vars(self, localvars, globalvars):
         classvars = dict()
