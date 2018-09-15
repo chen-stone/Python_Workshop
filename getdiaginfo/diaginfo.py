@@ -52,16 +52,15 @@ Example of Diagnosis information output:
     *********************************End*********************************
 """
 
+__author__ = 'Chen Dexing chendexing@gmail.com'
+__version__ = 'DiagInfo v1'
+
 import multiprocessing
 import os
 import sys
 import inspect
 import infoelereg
 import fmtoutput
-
-if __debug__:
-    import cgitb
-    # cgitb.enable(format="text")
 
 
 class DiagException(Exception):
@@ -83,7 +82,6 @@ class DiagInfo(object):
         sys.excepthook = diobj  # Registering python's default exception handler.
         di.log()    # logging diagnosis information at certain location.
     """
-
     def __init__(self, logdir=None, out2scn=True, excdvars=None, incdvars=None):
         """Constructor for DiagInfo class.
 
@@ -98,6 +96,8 @@ class DiagInfo(object):
         self.__dexp = dict()
         self.__dexpitem = ["etype", "evalue", "tb", "sehandler"]
         self.__logfp = self.__create_log_file() if self.__logdir else None  # Creating logging file.
+        if self.__logfp:
+            self.__logfp.write("Created by diaginfo module, version <{}>".format(__version__))
 
     def __del__(self):
         """Deconstructor.
