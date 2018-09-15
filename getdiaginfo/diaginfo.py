@@ -72,9 +72,6 @@ class DiagException(Exception):
     pass
 
 
-
-
-
 class DiagInfo(object):
     """Collecting and outputting diagnosis information when needed.
 
@@ -87,7 +84,7 @@ class DiagInfo(object):
         di.log()    # logging diagnosis information at certain location.
     """
 
-    def __init__(self, logdir=None, out2scn=True, excdvars=[], incdvars=[]):
+    def __init__(self, logdir=None, out2scn=True, excdvars=None, incdvars=None):
         """Constructor for DiagInfo class.
 
         Initializing parameters for object of this class.
@@ -96,8 +93,8 @@ class DiagInfo(object):
         self.__dinfo = None  # Storing diagnosis information, be initialized in log method.
         self.__lbrief, self.__ldetail = infoelereg.diag_elements_register()
         self.__out2scn = out2scn  # Switch control output in screen or not.
-        self.__excdvars = excdvars  # Dumping all variables except those in __excdvars list.
-        self.__incdvars = incdvars  # Dumping the specified variables in __incdvars list.
+        self.__excdvars = excdvars if excdvars else list()  # Dumping all variables except those in __excdvars list.
+        self.__incdvars = incdvars if incdvars else list()  # Dumping the specified variables in __incdvars list.
         self.__dexp = dict()
         self.__dexpitem = ["etype", "evalue", "tb", "sehandler"]
         self.__logfp = self.__create_log_file() if self.__logdir else None  # Creating logging file.
@@ -131,7 +128,7 @@ class DiagInfo(object):
                             ".log"])
         return open(os.path.join(self.__logdir, filename), "w")
 
-    def log(self, desp="", excdvars=[], incdvars=[]):
+    def log(self, desp="", excdvars=None, incdvars=None):
         """Logging diagnosis information and outputting it.
 
         Printing brief information in console and detail information in log file.
@@ -141,9 +138,10 @@ class DiagInfo(object):
         """
         excdvarsbak = len(self.__excdvars)
         incdvarsbak = len(self.__incdvars)
-        self.__excdvars.extend(excdvars)
-        self.__incdvars.extend(incdvars)
-
+        if excdvars:
+            self.__excdvars.extend(excdvars)
+        if incdvars:
+            self.__incdvars.extend(incdvars)
         self.__dinfo = dict()
         self.__dinfo["Begin"] = "".join(["\n"*3, "*"*42, "Begin", "*"*42])
         self.__dinfo["End"] = "".join(["*"*42, "End", "*"*42])   
@@ -208,6 +206,10 @@ class DiagInfo(object):
             self.__get_exc_info_log()
 
     def __get_exc_info_log(self):
+        """Extracting raw traceback from current stack frame when there is no excpetion really happened or
+
+        exception is handled by except branch.
+        """
         tb = self.__dexp["tb"]
         isde = (self.__dexp["etype"].__name__ == "DiagException")
         f = tb.tb_frame.f_back.f_back if isde else tb.tb_frame
