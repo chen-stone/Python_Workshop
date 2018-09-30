@@ -62,6 +62,9 @@ import inspect
 import infoelereg
 import fmtoutput
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 
 class DiagException(Exception):
     """Throw an exception manually if necessary.
