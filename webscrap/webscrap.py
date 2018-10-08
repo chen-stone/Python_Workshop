@@ -182,7 +182,6 @@ if __name__ == "__main__":
     import time
     t0 = time.time()
     ra = RefineArticle("王国血脉", r"https://www.piaotian.com/html/8/8484/index.html")
-    # ra = RefineArticle("爱与欲的年华", r"http://www.ltxs2018.org/0_515/")
     # ra = RefineArticle("王国血脉", r"https://book.qidian.com/info/1003586227#Catalog")
     # ra = RefineArticle("廖雪峰", r"https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000")
     ra.scrap_contents()
