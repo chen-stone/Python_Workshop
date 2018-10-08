@@ -11,7 +11,7 @@ class Test:
     def run(self, rp1, rp2="rp2"):
         self.tp1="trp1"
         rp3 = "rp3"
-        diobj.log()
+        diobj.briefing("rp3", "tp1", "rp2")
         try:
             1/0
         except ZeroDivisionError:
@@ -54,7 +54,7 @@ if __name__ == "__main__":
         sys.path.append(pkgpath)
     # Beginning test...
     import getdiaginfo
-    diobj = getdiaginfo.enable(out2scn=True)
+    diobj = getdiaginfo.enable(conloglevel="log")
     # Testing function diagnosis information log: just log, except branch log.
     f1("f1p1")
     # Testing class diagnosis information log: just log, except branch log and raised exception.

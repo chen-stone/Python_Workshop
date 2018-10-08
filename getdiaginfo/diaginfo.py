@@ -85,15 +85,15 @@ class DiagInfo(object):
         sys.excepthook = diobj  # Registering python's default exception handler.
         di.log()    # logging diagnosis information at certain location.
     """
-    def __init__(self, logdir=None, out2scn=True, excdvars=None, incdvars=None):
+    def __init__(self, logdir=None, conloglevel="log", excdvars=None, incdvars=None):
         """Constructor for DiagInfo class.
 
         Initializing parameters for object of this class.
         """
         self.__logdir = logdir  # Directory of logging file.
         self.__dinfo = None  # Storing diagnosis information, be initialized in log method.
-        self.__lbrief, self.__ldetail = infoelereg.diag_elements_register()
-        self.__out2scn = out2scn  # Switch control output in screen or not.
+        self.__lbrief, self.__logconsole, self.__logfile = infoelereg.diag_elements_register()
+        self.__conloglevel = conloglevel  # Switch control output in screen or not.
         self.__excdvars = excdvars if excdvars else list()  # Dumping all variables except those in __excdvars list.
         self.__incdvars = incdvars if incdvars else list()  # Dumping the specified variables in __incdvars list.
         self.__dexp = dict()
@@ -145,27 +145,48 @@ class DiagInfo(object):
             self.__excdvars.extend(excdvars)
         if incdvars:
             self.__incdvars.extend(incdvars)
-        self.__dinfo = dict()
-        self.__dinfo["Begin"] = "".join(["\n"*3, "*"*42, "Begin", "*"*42])
-        self.__dinfo["End"] = "".join(["*"*42, "End", "*"*42])   
-        self.__dinfo["User Description"] = desp
 
+        self.__data_init(desp)
         self.__collect_diag_info()
         self.__fmt_output()
 
         self.__excdvars = self.__excdvars[:excdvarsbak]
-        self.__incdvars = self.__excdvars[:incdvarsbak]
+        self.__incdvars = self.__incdvars[:incdvarsbak]
         self.__dexp = {}
+
+    def briefing(self, *incdvars):
+        # print "self.__conloglevel is ", self.__conloglevel
+        if self.__conloglevel == "debug":
+            incdvarsbak = self.__incdvars
+            self.__incdvars = incdvars
+
+            self.__data_init()
+            self.__collect_diag_info()
+
+            funcframes = self.__dinfo["Variable Records"]
+            for funcname in funcframes:
+                if funcframes[funcname]["user define"]:
+                    print "function %s:" % funcname
+                    for k in funcframes[funcname]["user define"]:
+                        print k, ": ", funcframes[funcname]["user define"][k]
+
+            self.__incdvars = incdvarsbak
 
     def __fmt_output(self):
         """Defining format of output information.
 
         Only used in log method. No further use.
         """
-        [fmtoutput.dftfuncmap[label]([self.__out2scn, None], label, self.__dinfo[label])
-            for label in self.__lbrief]
+        [fmtoutput.dftfuncmap[label]([self.__conloglevel, None], label, self.__dinfo[label])
+         for label in self.__logconsole]
         [fmtoutput.dftfuncmap[label]([False, self.__logfp], label, self.__dinfo[label])
-            for label in self.__ldetail]
+         for label in self.__logfile]
+
+    def __data_init(self, desp=""):
+        self.__dinfo = dict()
+        self.__dinfo["Begin"] = "".join(["\n" * 3, "*" * 42, "Begin", "*" * 42])
+        self.__dinfo["End"] = "".join(["*" * 42, "End", "*" * 42])
+        self.__dinfo["User Description"] = desp
 
     def __collect_diag_info(self):
         """Collecting diagnosis information.

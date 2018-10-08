@@ -6,7 +6,7 @@ import diaginfo
 __all__ = ["enable"]
 
 
-def enable(logdir="D:\\", hooksysexp=True, out2scn=True, excdvars=None, incdvars=None):
+def enable(logdir="D:\\", hooksysexp=True, conloglevel="debug", excdvars=None, incdvars=None):
     """Creating a object of diaginfo class and deciding to use it to instead of system's exception handler or not.
 
     return this object.
@@ -23,7 +23,7 @@ def enable(logdir="D:\\", hooksysexp=True, out2scn=True, excdvars=None, incdvars
         lexcdvars.extend(excdvars)
     if incdvars:
         lincdvars.extend(incdvars)
-    diobj = diaginfo.DiagInfo(logdir=logdir, out2scn=out2scn, excdvars=lexcdvars, incdvars=lincdvars)
+    diobj = diaginfo.DiagInfo(logdir=logdir, conloglevel=conloglevel, excdvars=lexcdvars, incdvars=lincdvars)
     if hooksysexp:
         sys.excepthook = diobj
     return diobj

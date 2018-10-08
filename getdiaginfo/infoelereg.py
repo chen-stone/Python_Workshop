@@ -1,8 +1,10 @@
 # coding=utf-8
 
+_lbriefconelemreg = ["Variable Records"]
+
 
 # Deciding which elements can be output to console and their output order
-_lbriefelereg = ["Begin",
+_logconelemreg = ["Begin",
                 "User Description",
                 "Process ID",
                 "Process Name",
@@ -16,7 +18,7 @@ _lbriefelereg = ["Begin",
 
 
 # Deciding which elements can be output to log file and their output order
-_ldetailelereg = _lbriefelereg[:-1] + ["Variable Records", "End"]
+_logfilelemreg = _logconelemreg[:-1] + ["Variable Records", "End"]
 
 
 def diag_elements_register():
@@ -24,9 +26,9 @@ def diag_elements_register():
 
     Only used in DiagInfo's __init__ method.
     """
-    return _lbriefelereg, _ldetailelereg
+    return _lbriefconelemreg, _logconelemreg, _logfilelemreg
 
 
 if __name__ == "__main__":
-    for ele in _lbriefelereg:
+    for ele in _logconelemreg:
         print ele
