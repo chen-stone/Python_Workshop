@@ -54,7 +54,7 @@ if __name__ == "__main__":
         sys.path.append(pkgpath)
     # Beginning test...
     import getdiaginfo
-    diobj = getdiaginfo.enable(conloglevel="log")
+    diobj = getdiaginfo.enable(conloglevel="debug")
     # Testing function diagnosis information log: just log, except branch log.
     f1("f1p1")
     # Testing class diagnosis information log: just log, except branch log and raised exception.

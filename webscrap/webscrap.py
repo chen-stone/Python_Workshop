@@ -2,7 +2,6 @@
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 from urlparse import urljoin
 import chardet
 from fake_useragent import UserAgent
@@ -13,7 +12,8 @@ import numbermap
 import re
 import auxtools
 import getdiaginfo
-dobj = getdiaginfo.enable(conloglevel="log")
+dobj = getdiaginfo.enable(conloglevel="debug")
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class RefineArticle:
@@ -103,7 +103,7 @@ class RefineArticle:
     def __get_chapters_content(self, bestblks):
         for bestblk in self.__dblkscores[bestblks]:
             totalchp = len(self.__daelemblks[bestblk])
-            dobj.briefing('_RefineArticle__daelemblks')
+            dobj.briefing(contents=self.__daelemblks[bestblk])
             getchpprogress = auxtools.ProgressBar("Begin to get every chapter")
             for pos, blkchapter in enumerate(self.__daelemblks[bestblk]):
                 getchpprogress(pos+1, totalchp)

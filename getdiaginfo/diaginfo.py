@@ -154,26 +154,16 @@ class DiagInfo(object):
         self.__incdvars = self.__incdvars[:incdvarsbak]
         self.__dexp = {}
 
-    def briefing(self, *incdvars):
-        # print "self.__conloglevel is ", self.__conloglevel
+    def briefing(self, *vars2show, **varsname2show):
+        # Todo need to serialized output...
         if self.__conloglevel == "debug":
             funcframe = sys._getframe(1)
-            print 
-
-            incdvarsbak = self.__incdvars
-            self.__incdvars = incdvars
-
-            self.__data_init()
-            self.__collect_diag_info()
-
-            funcframes = self.__dinfo["Variable Records"]
-            for funcname in funcframes:
-                if funcframes[funcname]["user define"]:
-                    print "function %s:" % funcname
-                    for k in funcframes[funcname]["user define"]:
-                        print k, ": ", funcframes[funcname]["user define"][k]
-
-            self.__incdvars = incdvarsbak
+            print "Function {0}, lineno {1}:".format(funcframe.f_code.co_name,
+                                                     funcframe.f_lineno)
+            for var in vars2show:
+                print '\t', var
+            for varname in varsname2show:
+                print '\t{0} = {1}'.format(varname, varsname2show[varname])
 
     def __fmt_output(self):
         """Defining format of output information.
