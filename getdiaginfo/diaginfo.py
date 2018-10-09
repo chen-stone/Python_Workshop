@@ -157,6 +157,9 @@ class DiagInfo(object):
     def briefing(self, *incdvars):
         # print "self.__conloglevel is ", self.__conloglevel
         if self.__conloglevel == "debug":
+            funcframe = sys._getframe(1)
+            print 
+
             incdvarsbak = self.__incdvars
             self.__incdvars = incdvars
 
