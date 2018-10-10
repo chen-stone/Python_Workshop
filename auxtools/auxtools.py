@@ -61,20 +61,42 @@ dwebcharsetmap  = {"gbk": "gb18030",
                    "utf-8": "utf-8"}
 
 
-def update_progress(pos, total, tolerance=1):
-    """This is a function used to generate progress bar in cli.
+def iterelement(data):
+    for elem in data:
+        yield elem
 
-    Usage:
-        update_progress(10, 100) means 10% progress.
-    """
-    if pos > total:
-        raise InputDataErr("Progress is more than 100%, input error!!!")
-    progress = round(float(pos)/total, 2)
-    barLength = 25  # Modify this to change the length of the progress bar
-    block = int(round(barLength*progress))
-    text = "\rPercent: [{0}] {1}%({2}/{3})".format("#"*block + "-"*(barLength-block), progress*100, pos, total)
-    sys.stdout.write(text)
-    sys.stdout.flush()
+
+def iterkvpair(data):
+    for k, v in data.items():
+        yield str(k)
+        yield [v]
+
+
+def find_type(data):
+    return type(data)
+
+
+def format_output(data, level, linehead, levelsign="\t"):
+    print("{0}{1}{2}".format(linehead, levelsign*level, data))
+
+
+satomoutputdata = {int, float, str, unicode}
+mixedata = {list: iterelement,
+            tuple: iterelement,
+            set: iterelement,
+            dict: iterkvpair}
+
+
+def data_output(data, output_func=format_output, classify_func=find_type, linehead="", level=-1):
+    datatype = classify_func(data)
+    if datatype in satomoutputdata:
+        output_func(data, level, linehead)
+    elif datatype in mixedata:
+        for subdata in mixedata[datatype](data):
+            data_output(subdata, output_func, classify_func, linehead, level+1)
+    else:
+        print "data type is unhandled: ", datatype
+        output_func(data, level, linehead)
 
 
 def _delimiter_print(spinfo):
@@ -92,14 +114,25 @@ def _main_test():
     # print generate_digit_list("3-10-2,11,12-16,20k")
     _delimiter_print("generate_digit_list test end.")
     # generate_digit_list test end.
+
     # Class ProgressBar test begin...
     _delimiter_print("Class ProgressBar test begin...")
     progress = ProgressBar("Testing task")
-    for p in range(101):
-        progress(p, 100)
-        time.sleep(0.5)
+    for p in range(11):
+        progress(p, 10)
+        time.sleep(0.1)
     _delimiter_print("Class ProgressBar test end.")
     # Class ProgressBar test end.
+
+    # Function data_output test begin...
+    _delimiter_print("Function data_output test begin...")
+    datas = [1, 1.0, "first-str",
+             set(["s1", "s2", "s3"]),
+             ['l1', 'l2', 'l3'],
+             {"dk1": {"dk11": "dv11"}, "dk2": ["dv21", "dv22"], ('dk31', 'dk32'): {"dv31", "dv32"}}]
+    [data_output(data) for data in datas]
+    _delimiter_print("Function data_output test end.")
+    # Function data_output test end.
 
 
 if __name__ == "__main__":

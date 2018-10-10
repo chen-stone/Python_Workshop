@@ -9,7 +9,7 @@ class Test:
         diobj.log()
 
     def run(self, rp1, rp2="rp2"):
-        self.tp1="trp1"
+        self.tp1 = "trp1"
         rp3 = "rp3"
         diobj.briefing("rp3", "tp1", "rp2")
         try:

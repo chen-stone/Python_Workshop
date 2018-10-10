@@ -60,6 +60,7 @@ import os
 import sys
 import inspect
 import infoelereg
+import auxtools
 import fmtoutput
 
 reload(sys)
@@ -154,17 +155,14 @@ class DiagInfo(object):
         self.__incdvars = self.__incdvars[:incdvarsbak]
         self.__dexp = {}
 
-    def briefing(self, *vars2show, **varsname2show):
+    def briefing(self, *vars2show, **varspair2show):
         # Todo need to serialized output...
         if self.__conloglevel == "debug":
             funcframe = sys._getframe(1)
             print "Function {0}, lineno {1}:".format(funcframe.f_code.co_name,
                                                      funcframe.f_lineno)
-            for var in vars2show:
-                print '\t', var
-            for varname in varsname2show:
-                print '\t{0} = {1}'.format(varname, varsname2show[varname])
-
+            auxtools.data_output(vars2show)
+            auxtools.data_output(varspair2show)
     def __fmt_output(self):
         """Defining format of output information.
 

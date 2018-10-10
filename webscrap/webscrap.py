@@ -12,7 +12,7 @@ import numbermap
 import re
 import auxtools
 import getdiaginfo
-dobj = getdiaginfo.enable(conloglevel="debug")
+dobj = getdiaginfo.enable(conloglevel="log")
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
@@ -112,7 +112,7 @@ class RefineArticle:
             [fp.write("\n".join(cp).encode("utf-8")) for cp in self.__contents]
 
     def __strip_chpt_content(self, curl):
-        contentblks, self.__dchptcntscores = dict(), dict()
+        dcontentblks, self.__dchptcntscores = dict(), dict()
         sp = self.__requests_get_with_paras(curl.encode("utf-8"))
         lenchapterweb = len(sp.text)
         for txtelem in sp.descendants:
@@ -121,9 +121,9 @@ class RefineArticle:
                 while papa.name in self.__notcntpapa:
                     papa = papa.parent
                 papaname = papa.name + str(papa.attrs)
-                contentblks.setdefault(papaname, []).append(self.__analysis_text(txtelem, papaname, lenchapterweb))
+                dcontentblks.setdefault(papaname, []).append(self.__analysis_text(txtelem, papaname, lenchapterweb))
         self.__dchptcntscores = {v: k for k, v in self.__dchptcntscores.items()}
-        return u"".join(contentblks[self.__dchptcntscores[max(self.__dchptcntscores.keys())]])
+        return u"".join(dcontentblks[self.__dchptcntscores[max(self.__dchptcntscores.keys())]])
 
     def __analysis_text(self, txtelem, papaname, totallen):
         self.__dchptcntscores[papaname] = self.__dchptcntscores.get(papaname, 0) + 0.1 + len(txtelem) * 100 / totallen
